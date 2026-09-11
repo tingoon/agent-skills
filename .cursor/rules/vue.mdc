@@ -1,0 +1,91 @@
+---
+alwaysApply: false
+description: Vue conventions — naming, props order, setup body order, composables, h()/SFC, legacy patterns
+globs: **/*.vue,**/*.ts
+---
+
+# Vue Style Guide
+
+## File Layout
+
+- **File names:** kebab-case (e.g., `file-name.ts`, `file-name.vue`).
+- **Exports:** Use named exports only.
+- **Structure:** One primary component per file. Colocate private components/composables only if unused elsewhere.
+- **Package UI:** Use `defineComponent` + `h()` in `.ts`. **Apps:** SFCs (`.vue`) or `.ts` are fine.
+
+## Naming
+
+- **Components:** PascalCase (e.g., `Button`). Set `defineComponent({ name: "..." })` to match the public surface.
+- **Event handlers:** `onX` for props (e.g., `onSubmit`), `handleX` for local handlers (e.g., `handleClick`). Prefer prop callbacks over `emit` for library components.
+- **Booleans:** Match Ark/DOM/HTML primitives (`disabled`, `open`). Do not use `is`/`can`/`should`/`has` prefixes unless for convenience flags (`isLoading`).
+- **Prop aliases:** Use `{name}Prop` for local name clashes (e.g., `const openProp = props.open`), not `prop{Name}`.
+- **Styling props:** Use `class` / `classNames` (not `className` / `rootClassName`).
+
+## Component Implementation
+
+- Prefer **Composition API** (`setup`, composables). Do not use Options API for new work.
+- Define props with `ComponentNameProps` (or `Props`) via `interface` or `type`, and declare a matching runtime `props` object on `defineComponent`.
+- **Package parts:** Use `inheritAttrs: false`; merge `attrs` onto the host node explicitly.
+
+## Props Order
+
+Group props in this order in interfaces and runtime `props` objects. Do not sort A-Z within groups.
+
+1. **Variants & appearance:** `variant`, `size`, placement, orientation.
+2. **Behavior & state:** `disabled`, `open`, controlled values, feature toggles, `name`, `id`, `collection`.
+3. **Content:** labels, icons, placeholders, `items`, slot content.
+4. **Event handlers:** `on*` callbacks. Keep controlled pairs together (`defaultOpen` then `open` / `modelValue`, then handlers).
+5. **Styling:** `class`, `classNames`.
+6. **Rest:** Sub-element `*Props` bags, instances, config objects, index signatures.
+
+**Edge cases:**
+
+- `value` / `modelValue`: Behavior (control state) or Content (display copy).
+- `positioning`: Behavior. `placement`/`position`/`side`: Variants.
+
+**Runtime `props` object:**
+
+- Mirror defaults with `default` on each key; use `PropType<...>` for non-trivial types.
+
+**`h()` / template attributes:**
+
+- Put `{...attrs}` first.
+- Do not pass default-slot content as a fake `children` prop — use the third argument to `h()` or SFC slots.
+- Do not put visual styling on sub-element `*Props` bags.
+
+## Setup Body Order
+
+Inside `setup(props, ctx)`, declare logic top-to-bottom. Skip unused steps.
+
+1. **Template refs:** `ref<HTMLElement | null>(null)`, `useTemplateRef`
+2. **Context & external composables:** `useX` inject helpers, router, form context
+3. **Local state:** `ref`, `shallowRef`, `reactive`, `useDisclosure`
+4. **Async / server state:** query/mutation composables
+5. **Derived values:** `computed`, sync `const` from props/state
+6. **Event handlers:** `handleX` functions
+7. **Watchers:** `watch`, `watchEffect`
+8. **Lifecycle & subscriptions:** `onMounted`, `onBeforeUnmount`, hotkeys, listeners
+9. **Provide:** `provideX(...)` after the value it depends on is ready
+10. **`return` render function / bindings:** `return () => h(...)` or (SFC) returned bindings
+
+_Note: Do not call composables after a conditional `return` from `setup`. Early UI guards belong inside the render function._
+
+## Composables & Performance
+
+- **Naming:** camelCase with `use` prefix (e.g., `useClearableInput`).
+- Extract non-trivial logic into composables. Call them synchronously in `setup`.
+- **Watchers:** Prefer `watch` with an explicit source over broad `watchEffect`. Clean up side effects in `onBeforeUnmount` / `onCleanup`.
+- **Performance:** Prefer `computed` for derived values. Do not wrap everything in `computed` / `shallowRef` by default. Avoid unnecessary `reactive` for props mirrors.
+
+## Render & Templates
+
+- **Fragments:** Prefer `h()` fragments (`[...]` children) over wrapper `div`s.
+- **Keys:** Use stable, unique keys for list items (data ID, not array index).
+- **Slot collisions:** When recipe `slots` and Vue `slots` collide in `setup`, rename (e.g., `slots: children`).
+- **SFCs:** Use `<script setup lang="ts">`; keep templates lean.
+
+## Legacy Patterns
+
+- **Options API:** Do not use `data`, `methods`, `computed` as options keys for new components.
+- **Vue 2 APIs:** Do not use `Vue.extend` or `this.$emit` / `this.$refs`. Use props callbacks / template refs.
+- **Context:** Prefer package `createContext` helpers (`provideX` / `useX`) over raw `provide`/`inject` string keys.

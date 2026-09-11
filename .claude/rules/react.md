@@ -1,0 +1,75 @@
+---
+paths:
+  - '**/*.tsx'
+  - '**/*.jsx'
+---
+# React Style Guide
+
+## File Layout
+
+- **File names:** kebab-case (e.g., `file-name.tsx`).
+- **Exports:** Use named exports only.
+- **Structure:** One primary component per file. Colocate private components/hooks only if unused elsewhere.
+
+## Naming
+
+- **Components:** PascalCase (e.g., `Button`).
+- **Event handlers:** `onX` for props (e.g., `onSubmit`), `handleX` for local handlers (e.g., `handleClick`).
+- **Booleans:** Match Ark/DOM/HTML primitives (`disabled`, `open`). Do not use `is`/`can`/`should`/`has` prefixes unless for convenience flags (`isLoading`).
+- **Prop aliases:** Use `{name}Prop` for local name clashes in destructuring (e.g., `open: openProp`), not `prop{Name}`.
+
+## Component Implementation
+
+- Use **functional components** only.
+- Define props with `ComponentNameProps` (or `Props` when colocated) via `interface` or `type`, destructured in the parameter list.
+
+## Props Order
+
+Group props in this order in interfaces and destructuring. Do not sort A-Z within groups.
+
+1. **Variants & appearance:** `variant`, `size`, placement, orientation.
+2. **Behavior & state:** `disabled`, `open`, controlled values, feature toggles, `name`, `id`, `asChild`, `collection`.
+3. **Content:** labels, icons, placeholders, `items`, `children`, slot content.
+4. **Event handlers:** `on*` callbacks. Keep controlled pairs together (`defaultOpen` then `open`, then handlers).
+5. **Styling:** `className`, `classNames`.
+6. **Rest:** Sub-element `*Props` bags, instances, config objects, index signatures.
+
+**Edge cases:**
+
+- `value`: Behavior (control state) or Content (display copy).
+- `positioning`: Behavior. `placement`/`position`/`side`: Variants.
+
+**JSX Attributes:**
+
+- Put `{...rest}` first.
+- Do not pass `children` as a JSX attribute (`children={...}`). Use nested JSX (`>{children}</>`).
+- Leave attribute A-Z sorting to the formatter (e.g., Biome).
+
+## Component Body Order
+
+Declare logic top-to-bottom. Skip unused steps.
+
+1. **Refs:** `useRef`
+2. **Context & external hooks:** `useContext`, router, custom `useX`
+3. **Local state:** `useState`, `useReducer`, `useDisclosure`
+4. **Async / server state:** `useQuery`, `useMutation`
+5. **Derived values:** Sync `const` from props/state
+6. **Event handlers:** `handleX`
+7. **Effects:** `useEffect`, `useLayoutEffect`
+8. **Subscriptions:** listeners, `useHotkey`
+9. **Early returns:** Loading/error guards
+10. **JSX Return**
+
+## Hooks & Performance
+
+- Extract non-trivial logic into custom hooks (`useX`).
+- Specify `useEffect` dependency arrays completely.
+- **Performance:** Check project configuration to determine if React Compiler is enabled. If disabled, use `useMemo`/`useCallback` only when profiling or passing stable references. If enabled, avoid manual memoization.
+
+## JSX & Legacy Patterns
+
+- **Fragments:** Use `<></>` instead of wrapper `div`s.
+- **Keys:** Use stable, unique keys for list items (data ID, not array index).
+- **Refs:** Do not use `forwardRef`; accept `ref` as a regular prop (React 19).
+- **Defaults:** Do not use `defaultProps`; use destructuring defaults.
+- **Context:** Prefer `<FooContext value={...}>` over `<FooContext.Provider>` (React 19).

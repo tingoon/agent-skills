@@ -1,0 +1,18 @@
+---
+paths:
+  - '**/*.stories.ts'
+---
+# Vue Storybook Style Guide
+
+**Scope:** Vue-specific Storybook rules. For general rules (Meta, layout, ordering), see `stories.md`.
+
+## Setup & Preview
+
+- **Format:** CSF using `@storybook/vue3-vite` or `@storybook/vue3-webpack5` (`.stories.ts`).
+- **Meta:** `const meta = preview.meta({ ... })` or `const meta: Meta<typeof Component> = { ... }`.
+- **Decorators:** Use per-story decorators only when extra context is needed.
+
+## Imports
+
+- **UI Components:** Import components from your project's UI library or local paths.
+- **Forms/Blocks/Charts:** Import from your project's respective libraries or local paths.
