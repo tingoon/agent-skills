@@ -1,0 +1,11 @@
+commit-msg:
+  commands:
+    commitlint:
+      run: bunx commitlint --edit {1}
+
+post-merge:
+  commands:
+    install-dependencies:
+      files: git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD
+      glob: [bun.lock]
+      run: bun install --frozen-lockfile

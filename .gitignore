@@ -1,0 +1,16 @@
+# dependencies
+node_modules
+.bun/
+
+# logs
+logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# agents
+.rulesync.local/
+.rulesync/**/.curated/
+.mcp.json
