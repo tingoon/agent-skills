@@ -12,7 +12,7 @@ This repository publishes **Agent Skills** only. Skills follow the [Agent Skills
 
 ## Add a skill
 
-1. `mkdir .rulesync/skills/my-skill`
+1. `mkdir skills/my-skill`
 2. Add `SKILL.md` — `name` must match the folder (lowercase, hyphens):
 
    ```yaml
@@ -24,7 +24,16 @@ This repository publishes **Agent Skills** only. Skills follow the [Agent Skills
 
 3. Optional: `references/`, `scripts/`, `assets/`
 4. `bun run sync`
-5. Commit `.rulesync/skills/` and generated `.cursor/skills/` / `.claude/skills/`
+5. Commit `skills/` and generated `.cursor/skills/` / `.claude/skills/`
+
+## Add a rule
+
+1. Add a flat file under `rules/` (no subfolders) — e.g. `rules/foo.styleguide.md`
+2. Include Cursor/rulesync frontmatter (`description`, `globs`, etc.)
+3. `bun run sync`
+4. Commit `rules/` and generated `.cursor/rules/` / `.claude/rules/`
+
+Flat filenames matter: `rulesync install` only picks up direct `.md` children of `rules/`.
 
 ## Test
 
