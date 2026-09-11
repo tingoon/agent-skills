@@ -1,0 +1,32 @@
+---
+root: false
+targets:
+  - "*"
+description: React-specific Storybook conventions
+globs:
+  - "**/*.stories.tsx"
+cursor:
+  alwaysApply: false
+---
+
+# React Storybook Style Guide
+
+**Scope:** React-specific Storybook rules. For general rules (Meta, layout, ordering), see `stories.md`.
+
+## Setup & Preview
+
+- **Format:** CSF using `@storybook/react-vite` or `@storybook/react-webpack5` (`.stories.tsx`).
+- **Meta:** `const meta = preview.meta({ ... })` or `const meta: Meta<typeof Component> = { ... }`.
+- **Decorators:** Use per-story decorators only when extra context is needed (e.g., portal host, theme provider).
+
+## Imports
+
+- **UI Components:** Import components from your project's UI library or local paths.
+- **Hooks:** Import hooks from your project's hooks library or third-party libraries.
+- **Utils:** Import utility functions from your project's utils library.
+
+_Note: Prefer light UI imports for stories. Heavy components and charts should stay on dedicated subpaths if your project uses them._
+
+## Resolution & Typing
+
+- Story files should be type-checked by the project's `tsconfig.json`.
