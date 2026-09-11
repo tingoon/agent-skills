@@ -1,10 +1,10 @@
 ---
 root: false
 targets:
-  - '*'
+  - "*"
 description: Where .gitignore entries live, how to group them, and pattern order
 globs:
-  - '**/.gitignore'
+  - "**/.gitignore"
 cursor:
   alwaysApply: false
 ---

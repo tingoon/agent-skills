@@ -1,13 +1,13 @@
 ---
 root: false
 targets:
-  - '*'
+  - "*"
 description: >-
   Environment variable naming, .env files, and Zod parse boundaries for
   client vs server
 globs:
-  - '**/.env'
-  - '**/.env.*'
+  - "**/.env"
+  - "**/.env.*"
 cursor:
   alwaysApply: false
 ---

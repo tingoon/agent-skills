@@ -1,14 +1,14 @@
 ---
 root: false
 targets:
-  - '*'
+  - "*"
 description: >-
   TypeScript typing, style, and TSDoc patterns for .ts and .tsx files
 globs:
-  - '**/*.ts'
-  - '**/*.tsx'
-  - '**/*.mts'
-  - '**/*.cts'
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.mts"
+  - "**/*.cts"
 cursor:
   alwaysApply: false
 ---
